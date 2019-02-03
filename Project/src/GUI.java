@@ -57,13 +57,20 @@ public class GUI {
         int finalInputRow = inputRow;
         int finalInputCol = inputCol;
         calculateButton.addActionListener(new ActionListener() {
+            int[][] inputs = new int[finalInputRow][finalInputCol];
             @Override
             public void actionPerformed(ActionEvent event) {
                 for (int i = 0; i < finalInputRow; i++) {
                     for (int j = 0; j < finalInputCol; j++) {
+                        try {
+                            inputs[i][j] = Integer.parseInt(inputFields[i][j].getText());
+                        }catch (Exception e){
+                            System.out.println("Only integers please!");
+                        }
                         outputFields[i][j].setText(inputFields[i][j].getText());
                     }
                 }
+                Calculator.augmenter(inputs);
             }
         });
         guiFrame.add(inputPanel);
