@@ -26,9 +26,9 @@ public class GUI {
             }
             inputRow = parseInt(xField.getText());
             inputCol = parseInt(yField.getText());
-        } while (inputRow == -1 || inputCol == -1);
+        } while (inputRow == -1 || inputCol == -1 || inputRow != inputCol);
         JFrame guiFrame = new JFrame();
-        guiFrame.setLayout(new GridLayout(3,1));
+        guiFrame.setLayout(new GridLayout(3, 1));
         guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         guiFrame.setTitle("Gaussian Elimination for Inverse Matrices");
         guiFrame.setSize(400, 400);
@@ -38,18 +38,18 @@ public class GUI {
         inputPanel.setLayout(new GridLayout(inputRow, inputCol));
         JTextField[][] inputFields = new JTextField[inputRow][inputCol];
         for (int i = 0; i < inputRow; i++) {
-            for (int j =0; j<inputCol; j++){
+            for (int j = 0; j < inputCol; j++) {
                 JTextField inputField = new JTextField(5);
-                inputFields[i][j]=inputField;
+                inputFields[i][j] = inputField;
                 inputPanel.add(inputField);
             }
         }
         outputPanel.setLayout(new GridLayout(inputRow, inputCol));
-        JTextField[][] outputFields = new JTextField[inputRow][inputCol];
+        JLabel[][] outputFields = new JLabel[inputRow][inputCol];
         for (int i = 0; i < inputRow; i++) {
             for (int j = 0; j < inputCol; j++) {
-                JTextField outputField = new JTextField(5);
-                outputFields[i][j]=outputField;
+                JLabel outputField = new JLabel();
+                outputFields[i][j] = outputField;
                 outputPanel.add(outputField);
             }
         }
@@ -57,20 +57,27 @@ public class GUI {
         int finalInputRow = inputRow;
         int finalInputCol = inputCol;
         calculateButton.addActionListener(new ActionListener() {
-            int[][] inputs = new int[finalInputRow][finalInputCol];
+            double[][] inputs = new double[finalInputRow][finalInputCol];
+
             @Override
             public void actionPerformed(ActionEvent event) {
                 for (int i = 0; i < finalInputRow; i++) {
                     for (int j = 0; j < finalInputCol; j++) {
                         try {
                             inputs[i][j] = Integer.parseInt(inputFields[i][j].getText());
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             System.out.println("Only integers please!");
                         }
-                        outputFields[i][j].setText(inputFields[i][j].getText());
                     }
                 }
-                Calculator.augmenter(inputs);
+                double[][] inverted = Calculator.augmenter(inputs);
+                for (int i = 0; i < finalInputRow; i++) {
+                    for (int j = 0; j < finalInputCol; j++) {
+                        double round = (double) Math.round(inverted[i][j] * 100) / 100;
+                        outputFields[i][j].setText("" +  round);
+                    }
+                }
+
             }
         });
         guiFrame.add(inputPanel);
